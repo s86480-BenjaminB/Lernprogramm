@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lernkarten PWA</title>
+
+  <!-- Manifest für PWA -->
+  <link rel="manifest" href="../json/manifest.json" />
+  <link rel="icon" href="/icon.png" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Lernkarten</h1>
+  </header>
+
+  <main id="app">
+    <section id="category-selection">
+      <button data-category="mathe">Mathematik</button>
+      <button data-category="web">Webtechnologien</button>
+    </section>
+
+    <section id="quiz" class="hidden">
+      <div id="question-container">
+        <p id="question-text"></p>
+        <div id="answers"></div>
+      </div>
+      <progress id="progress" value="0" max="1"></progress>
+    </section>
+
+    <section id="summary" class="hidden">
+      <h2>Dein Ergebnis</h2>
+      <p id="stats"></p>
+      <button onclick="location.reload()">Neu starten</button>
+    </section>
+  </main>
+
+  <!-- JavaScript -->
+  <script type="module" src="../js/app.js"></script>
+
+  <!-- Service Worker Registrierung -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('../js/sw.js')
+        .then(() => console.log('✅ Service Worker registriert'))
+        .catch(err => console.error('❌ Fehler beim Registrieren:', err));
+    }
+  </script>
+</body>
+</html>
