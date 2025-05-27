@@ -5,7 +5,7 @@ const FILES_TO_CACHE = [
   '/style.css',
   '/app.js',
   '/manifest.json',
-  '/icon.png' // falls vorhanden, sonst entfernen
+  '/icon.png'
 ];
 
 self.addEventListener('install', event => {
