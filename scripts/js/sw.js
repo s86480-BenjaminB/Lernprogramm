@@ -1,11 +1,10 @@
 const CACHE_NAME = 'lernprogramm-v1';
 const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/manifest.json',
-  '/icon.png'
+  "/scripts/html/index.html",
+  "/scripts/css/style.css",
+  "/scripts/js/app.js",
+  "/scripts/json/manifest.json",
+  "/images/icon.png"  
 ];
 
 self.addEventListener('install', event => {

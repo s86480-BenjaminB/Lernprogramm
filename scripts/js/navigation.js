@@ -1,4 +1,3 @@
-// Navbar
 document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
@@ -9,10 +8,17 @@ document.querySelectorAll('.nav-links a').forEach(link => {
         view.classList.add('hidden')
       );
   
-      const viewToShow = document.getElementById(`view-${target}`);
-      if (viewToShow) {
-        viewToShow.classList.remove('hidden');
+      const toShow = document.getElementById(`view-${target}`);
+      if (toShow) {
+        toShow.classList.remove('hidden');
       }
+  
+      if (target === 'mathe') {
+        ladeAlleMatheFragen();
+      } else if (target === 'natur') {
+        ladeAlleNaturFragen();
+      }
+      
     });
   });
   

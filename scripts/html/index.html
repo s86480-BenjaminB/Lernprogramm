@@ -6,11 +6,16 @@
   <title>LernApp</title>
 
   <!-- Manifest & Icon für PWA -->
-  <link rel="manifest" href="../../scripts/json/manifest.json" />
+  <link rel="manifest" href="../json/manifest.json" />
   <link rel="icon" href="../../images/main_icon.png" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="../../scripts/css/style.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- KaTeX Styles & Scripts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
 </head>
 <body>
   <div class="app-container">
@@ -33,8 +38,28 @@
       <!-- Ansicht: Mathematik -->
       <section id="view-mathe" class="view">
         <h2>Mathematik</h2>
-        <p>Hier erscheinen bald deine Mathefragen.</p>
-      </section>
+        <!-- Fragenanzeige -->
+        <div id="frage-box">
+          <div class="question-area">
+            <p id="frage-text"></p>
+            <div id="antwort-buttons" class="answer-buttons"></div>
+          </div>
+          <div class="progress-area">
+            <div id="progress-bar" class="progress-container"></div>
+          </div>
+        </div>
+        <!-- Progress bar -->
+        <div class="progress-area">
+          <progress id="progress-bar" max="1" value="0"></progress>
+        </div>
+
+        <!-- Auswertung -->
+        <div id="auswertung-box" class="hidden auswertung-box">
+          <h3>Ergebnis</h3>
+          <p id="auswertung-text"></p>
+          <button id="restart-btn" onclick="matheNeuStarten()">🔁 Nochmal starten</button>
+        </div>
+      </section>      
 
       <!-- Ansicht: Naturwissenschaften -->
       <section id="view-natur" class="view hidden">
@@ -45,7 +70,7 @@
       <!-- Ansicht: eigene Karten -->
       <section id="view-eigene" class="view hidden">
         <h2>Eigene Lernkarten</h2>
-        <p>Hier kannst du eigene Fragen erstellen oder importieren.</p>
+        <p>Hier kann man später mal eigene Fragen erstellen(?).</p>
       </section>
     </main>
 
@@ -55,10 +80,12 @@
     </aside>
   </div>
 
-  <!-- JS: Navbar -->
+  <!-- JS -->
   <script src="../js/navigation.js"></script>
+  <script src="../js/questionloader.js"></script>
 
   <!-- Service Worker Registrierung -->
+  
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('../js/sw.js')
@@ -66,5 +93,6 @@
         .catch(err => console.error('❌ Fehler beim Registrieren:', err));
     }
   </script>
+
 </body>
 </html>
