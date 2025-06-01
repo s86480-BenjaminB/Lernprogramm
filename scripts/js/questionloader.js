@@ -28,42 +28,29 @@ async function ladeAlleMatheFragen() {
     }
 }
 
-const apiUrl = 'https://idefix.informatik.htw-dresden.de:8888/api/quizzes?page=0';
-const username = 's86480@htw-dresden.de';
-const password = 'Bb26.07.?';
-
 async function ladeAlleNaturFragen() {
-  console.log('Lade Naturwissenschaften von REST API');
-
+  console.log('🌐 Lade Naturfragen über REST');
   try {
-    const res = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Basic ' + btoa(`${username}:${password}`)
-      }
-    });
-
-    const daten = await res.json();
-    const fragen = daten.content;
+    const fragen = await getAllQuizzes();
 
     if (!fragen.length) {
-      document.getElementById('view-natur').innerHTML += '<p>Keine Fragen vorhanden.</p>';
+      document.getElementById('view-natur').innerHTML = `
+        <h2>Naturwissenschaften</h2>
+        <p>⚠️ Keine Fragen verfügbar.</p>
+      `;
       return;
     }
 
-    zeigeNaturFrage(fragen[0]); 
+    zeigeNaturFrage(fragen[0]);
   } catch (err) {
-    // ersetzt h2 und p da ansonst Fehler <p> bei mehrmaligen Laden öfters kommt. 
-    // (man könnte hier auch eine extra id einfügen die einfach schaut ob diese schon existiert.)
-    console.error('Fehler beim Laden der Naturfragen:', err);
-    const container = document.getElementById('view-natur');
-    container.innerHTML = `
+    console.error('❌ Fehler in ladeNaturFragen():', err);
+    document.getElementById('view-natur').innerHTML = `
       <h2>Naturwissenschaften</h2>
-      <p>Fehler beim Laden der Fragen.</p>
+      <p>❌ Fehler beim Laden der Fragen.</p>
     `;
-
   }
 }
+
 
 function zeigeNaturFrage(frageObjekt) {
   const container = document.getElementById('view-natur');
