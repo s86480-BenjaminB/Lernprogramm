@@ -1,6 +1,6 @@
 const fragenUrl = '../json/fragen.json';
 let alleMatheFragen = [];
-let aktuellerIndex = 0;
+let aktuellerMatheIndex = 0;
 let matheErgebnisse = [];
 let geschichteFragen = [];
 let geschichteIndex = 0;
@@ -18,25 +18,28 @@ function shuffleArray(array) {
   
 
 async function ladeAlleMatheFragen() {
-    console.log('📥 ladeAlleMatheFragen() wurde aufgerufen');
-    try {
-        const res = await fetch(fragenUrl);
-        const daten = await res.json();
-        alleMatheFragen = shuffleArray(daten.mathe); // einmal mischen
-        aktuellerMatheIndex = 0;
-        matheErgebnisse = [];
-        zeigeMatheFrage(alleMatheFragen[aktuellerMatheIndex]);
-        updateProgressBar();
-    } catch (err) {
-        console.error('Fehler beim Laden:', err);
-    }
+  try {
+    const res = await fetch(fragenUrl);
+    const daten = await res.json();
+    alleMatheFragen = shuffleArray(daten.mathe);
+    aktuellerMatheIndex = 0;
+    matheErgebnisse = [];
+
+    updateProgressBar(aktuellerMatheIndex, alleMatheFragen.length, "mathe");
+    zeigeMatheFrage(alleMatheFragen[aktuellerMatheIndex]);
+  } catch (err) {
+    console.error('Fehler beim Laden:', err);
+  }
 }
+
 
 async function ladeAlleGeschichteFragen() {
   try {
     geschichteFragen = (await getAllQuizzes()).slice(0, 10);
     geschichteIndex = 0;
     geschichteErgebnisse = [];
+
+    updateProgressBar(geschichteIndex, geschichteFragen.length, "geschichte");
 
     if (geschichteFragen.length === 0) {
       document.getElementById('view-geschichte').innerHTML = `
@@ -56,18 +59,15 @@ async function ladeAlleGeschichteFragen() {
 }
 
 
+
 function zeigeGeschichteFrage(frageObjekt) {
-  const container = document.getElementById('view-geschichte');
-  container.innerHTML = '';
+  const frageText = document.getElementById('geschichte-frage-text');
+  const antwortContainer = document.getElementById('geschichte-antwort-buttons');
 
-  const title = document.createElement('h2');
-  title.textContent = frageObjekt.title;
+  frageText.innerHTML = frageObjekt.text;
+  antwortContainer.innerHTML = '';
 
-  const text = document.createElement('p');
-  text.textContent = frageObjekt.text;
-
-  const buttonArea = document.createElement('div');
-  buttonArea.className = 'answer-buttons';
+  document.getElementById('progress-bar').value = geschichteIndex;
 
   frageObjekt.options.forEach((opt, index) => {
     const btn = document.createElement('button');
@@ -77,8 +77,7 @@ function zeigeGeschichteFrage(frageObjekt) {
     btn.onclick = async () => {
       const result = await solveQuiz(frageObjekt.id, [index]);
 
-      // Feedback basically wie bei den Mathe-Aufgaben
-      const buttons = buttonArea.querySelectorAll('button');
+      const buttons = antwortContainer.querySelectorAll('button');
       buttons.forEach((b, i) => {
         if (i === index) {
           b.classList.add(result.success ? 'antwort-richtig' : 'antwort-falsch');
@@ -89,8 +88,10 @@ function zeigeGeschichteFrage(frageObjekt) {
       });
 
       geschichteErgebnisse.push(result.success);
+      geschichteIndex++;
+      updateProgressBar(geschichteIndex, geschichteFragen.length, "geschichte");
+
       setTimeout(() => {
-        geschichteIndex++;
         if (geschichteIndex < geschichteFragen.length) {
           zeigeGeschichteFrage(geschichteFragen[geschichteIndex]);
         } else {
@@ -99,13 +100,8 @@ function zeigeGeschichteFrage(frageObjekt) {
       }, 1500);
     };
 
-    buttonArea.appendChild(btn);
+    antwortContainer.appendChild(btn);
   });
-
-  container.appendChild(title);
-  container.appendChild(text);
-  container.appendChild(buttonArea);
-
 }
   
   
@@ -131,43 +127,46 @@ function zeigeMatheFrage(frageObjekt) {
       btn.onclick = () => prüfeMatheAntwort(antwort === frageObjekt.l[0], btn, frageObjekt.l[0]);
       antwortContainer.appendChild(btn);
     });
+    updateProgressBar(aktuellerMatheIndex, alleMatheFragen.length, "mathe");
   
-    updateProgressBar();
 }
 
-function updateProgressBar() {
-    const bar = document.getElementById('progress-bar');
-    bar.max = alleMatheFragen.length;
-    bar.value = matheErgebnisse.length;
+function updateProgressBar(value, max, fach) {
+  const bar = document.getElementById(`progress-bar-${fach}`);
+  if (bar) {
+    bar.max = max;
+    bar.value = value;
+  }
 }
+
   
 
 function prüfeMatheAntwort(istKorrekt, btn, richtigeAntwort) {
-    const buttons = document.querySelectorAll('.antwort-btn');
-    buttons.forEach(b => {
-      const val = b.textContent.trim().replace(/\s/g, '');
-      const richtig = richtigeAntwort.replace(/\s/g, '');
-      if (b === btn) {
-        b.classList.add(istKorrekt ? 'antwort-richtig' : 'antwort-falsch');
-      } else if (val === richtig) {
-        b.classList.add('antwort-richtig');
-      } else {
-        b.classList.add('antwort-neutral');
-      }
-      b.disabled = true;
-    });
-  
-    matheErgebnisse.push(istKorrekt);
-    updateProgressDots();
-  
-    setTimeout(() => {
-      aktuellerMatheIndex++;
-      if (aktuellerMatheIndex < alleMatheFragen.length) {
-        zeigeMatheFrage(alleMatheFragen[aktuellerMatheIndex]);
-      } else {
-        zeigeAuswertung();
-      }
-    }, 1500);
+  const buttons = document.querySelectorAll('.antwort-btn');
+  buttons.forEach(b => {
+    const val = b.textContent.trim().replace(/\s/g, '');
+    const richtig = richtigeAntwort.replace(/\s/g, '');
+    if (b === btn) {
+      b.classList.add(istKorrekt ? 'antwort-richtig' : 'antwort-falsch');
+    } else if (val === richtig) {
+      b.classList.add('antwort-richtig');
+    } else {
+      b.classList.add('antwort-neutral');
+    }
+    b.disabled = true;
+  });
+
+  matheErgebnisse.push(istKorrekt);
+  aktuellerMatheIndex++;
+  updateProgressBar(aktuellerMatheIndex, alleMatheFragen.length, "mathe");
+
+  setTimeout(() => {
+    if (aktuellerMatheIndex < alleMatheFragen.length) {
+      zeigeMatheFrage(alleMatheFragen[aktuellerMatheIndex]);
+    } else {
+      zeigeAuswertung();
+    }
+  }, 1500);
 }
 
 
@@ -175,17 +174,14 @@ function zeigeGeschichteAuswertung() {
   const richtig = geschichteErgebnisse.filter(x => x).length;
   const falsch = geschichteErgebnisse.length - richtig;
 
-  const container = document.getElementById('view-geschichte');
-  container.innerHTML = `
-    <div class="auswertung-box">
-      <h3>Ergebnis</h3>
-      <p>Du hast ${richtig} richtig und ${falsch} falsch beantwortet.</p>
-      <button id="restart-geschichte-btn">Nochmal starten</button>
-    </div>
-  `;
+  document.getElementById('geschichte-auswertung-box').classList.remove('hidden');
+  document.getElementById('geschichte-frage-box').classList.add('hidden');
+  document.getElementById('geschichte-auswertung-text').textContent =
+    `Du hast ${richtig} richtig und ${falsch} falsch beantwortet.`;
 
-  document.getElementById('restart-geschichte-btn').onclick = () => ladeAlleGeschichteFragen();
+  document.getElementById('geschichte-restart-btn').onclick = geschichteNeuStarten;
 }
+
 
 
 function zeigeAuswertung() {
@@ -206,8 +202,18 @@ function matheNeuStarten() {
   
     document.getElementById('auswertung-box').classList.add('hidden');
     document.getElementById('frage-box').classList.remove('hidden');
-    document.getElementById('progress-bar').value = 0;
+    document.getElementById('progress-bar-mathe').value = 0;
   
     ladeAlleMatheFragen();
 }
-  
+
+function geschichteNeuStarten() {
+  geschichteIndex = 0;
+  geschichteErgebnisse = [];
+
+  document.getElementById('geschichte-auswertung-box').classList.add('hidden');
+  document.getElementById('geschichte-frage-box').classList.remove('hidden');
+  document.getElementById('progress-bar-geschichte').value = 0;
+
+  ladeAlleGeschichteFragen();
+}
