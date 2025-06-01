@@ -15,8 +15,8 @@ document.querySelectorAll('.nav-links a').forEach(link => {
   
       if (target === 'mathe') {
         ladeAlleMatheFragen();
-      } else if (target === 'natur') {
-        ladeAlleNaturFragen();
+      } else if (target === 'geschichte') {
+        ladeAlleGeschichteFragen();
       }
       
     });

@@ -265,6 +265,12 @@ progress::-moz-progress-bar {
   background-color: #1565c0;
 }
 
+#view-geschichte .auswertung-box {
+  border: 2px solid #ffcc80; /* orange */
+}
+
+
+
 
 /* Optional: kleine Box-Trennung bei schmalen Viewports */
 @media (max-width: 768px) {

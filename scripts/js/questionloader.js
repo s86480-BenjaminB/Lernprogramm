@@ -1,7 +1,11 @@
 const fragenUrl = '../json/fragen.json';
-let alleFragen = [];
+let alleMatheFragen = [];
 let aktuellerIndex = 0;
-let ergebnisse = [];
+let matheErgebnisse = [];
+let geschichteFragen = [];
+let geschichteIndex = 0;
+let geschichteErgebnisse = [];
+
 
 function shuffleArray(array) {
     const arr = array.slice();
@@ -18,43 +22,43 @@ async function ladeAlleMatheFragen() {
     try {
         const res = await fetch(fragenUrl);
         const daten = await res.json();
-        alleFragen = shuffleArray(daten.mathe); // einmal mischen
-        aktuellerIndex = 0;
-        ergebnisse = [];
-        zeigeMatheFrage(alleFragen[aktuellerIndex]);
+        alleMatheFragen = shuffleArray(daten.mathe); // einmal mischen
+        aktuellerMatheIndex = 0;
+        matheErgebnisse = [];
+        zeigeMatheFrage(alleMatheFragen[aktuellerMatheIndex]);
         updateProgressBar();
     } catch (err) {
         console.error('Fehler beim Laden:', err);
     }
 }
 
-async function ladeAlleNaturFragen() {
-  console.log('🌐 Lade Naturfragen über REST');
+async function ladeAlleGeschichteFragen() {
   try {
-    const fragen = await getAllQuizzes();
+    geschichteFragen = (await getAllQuizzes()).slice(0, 10);
+    geschichteIndex = 0;
+    geschichteErgebnisse = [];
 
-    if (!fragen.length) {
-      document.getElementById('view-natur').innerHTML = `
-        <h2>Naturwissenschaften</h2>
-        <p>⚠️ Keine Fragen verfügbar.</p>
+    if (geschichteFragen.length === 0) {
+      document.getElementById('view-geschichte').innerHTML = `
+        <h2>Geschichte</h2>
+        <p>Keine Fragen verfügbar.</p>
       `;
       return;
     }
 
-    zeigeNaturFrage(fragen[0]);
+    zeigeGeschichteFrage(geschichteFragen[geschichteIndex]);
   } catch (err) {
-    console.error('❌ Fehler in ladeNaturFragen():', err);
-    document.getElementById('view-natur').innerHTML = `
-      <h2>Naturwissenschaften</h2>
-      <p>❌ Fehler beim Laden der Fragen.</p>
+    document.getElementById('view-geschichte').innerHTML = `
+      <h2>Geschichte</h2>
+      <p>Fehler beim Laden der Fragen.</p>
     `;
   }
 }
 
 
-function zeigeNaturFrage(frageObjekt) {
-  const container = document.getElementById('view-natur');
-  container.innerHTML = ''; // alles löschen, damit kein doppelter Text
+function zeigeGeschichteFrage(frageObjekt) {
+  const container = document.getElementById('view-geschichte');
+  container.innerHTML = '';
 
   const title = document.createElement('h2');
   title.textContent = frageObjekt.title;
@@ -63,14 +67,38 @@ function zeigeNaturFrage(frageObjekt) {
   text.textContent = frageObjekt.text;
 
   const buttonArea = document.createElement('div');
-  buttonArea.id = 'natur-buttons';
   buttonArea.className = 'answer-buttons';
 
   frageObjekt.options.forEach((opt, index) => {
     const btn = document.createElement('button');
     btn.className = 'antwort-btn';
     btn.textContent = opt;
-    btn.onclick = () => alert(`Du hast Option ${index} gewählt (noch keine Prüfung)`);
+
+    btn.onclick = async () => {
+      const result = await solveQuiz(frageObjekt.id, [index]);
+
+      // Feedback basically wie bei den Mathe-Aufgaben
+      const buttons = buttonArea.querySelectorAll('button');
+      buttons.forEach((b, i) => {
+        if (i === index) {
+          b.classList.add(result.success ? 'antwort-richtig' : 'antwort-falsch');
+        } else {
+          b.classList.add('antwort-neutral');
+        }
+        b.disabled = true;
+      });
+
+      geschichteErgebnisse.push(result.success);
+      setTimeout(() => {
+        geschichteIndex++;
+        if (geschichteIndex < geschichteFragen.length) {
+          zeigeGeschichteFrage(geschichteFragen[geschichteIndex]);
+        } else {
+          zeigeGeschichteAuswertung();
+        }
+      }, 1500);
+    };
+
     buttonArea.appendChild(btn);
   });
 
@@ -79,7 +107,6 @@ function zeigeNaturFrage(frageObjekt) {
   container.appendChild(buttonArea);
 
 }
-
   
   
 function zeigeMatheFrage(frageObjekt) {
@@ -110,8 +137,8 @@ function zeigeMatheFrage(frageObjekt) {
 
 function updateProgressBar() {
     const bar = document.getElementById('progress-bar');
-    bar.max = alleFragen.length;
-    bar.value = ergebnisse.length;
+    bar.max = alleMatheFragen.length;
+    bar.value = matheErgebnisse.length;
 }
   
 
@@ -130,13 +157,13 @@ function prüfeMatheAntwort(istKorrekt, btn, richtigeAntwort) {
       b.disabled = true;
     });
   
-    ergebnisse.push(istKorrekt);
+    matheErgebnisse.push(istKorrekt);
     updateProgressDots();
   
     setTimeout(() => {
-      aktuellerIndex++;
-      if (aktuellerIndex < alleFragen.length) {
-        zeigeMatheFrage(alleFragen[aktuellerIndex]);
+      aktuellerMatheIndex++;
+      if (aktuellerMatheIndex < alleMatheFragen.length) {
+        zeigeMatheFrage(alleMatheFragen[aktuellerMatheIndex]);
       } else {
         zeigeAuswertung();
       }
@@ -144,12 +171,29 @@ function prüfeMatheAntwort(istKorrekt, btn, richtigeAntwort) {
 }
 
 
+function zeigeGeschichteAuswertung() {
+  const richtig = geschichteErgebnisse.filter(x => x).length;
+  const falsch = geschichteErgebnisse.length - richtig;
+
+  const container = document.getElementById('view-geschichte');
+  container.innerHTML = `
+    <div class="auswertung-box">
+      <h3>Ergebnis</h3>
+      <p>Du hast ${richtig} richtig und ${falsch} falsch beantwortet.</p>
+      <button id="restart-geschichte-btn">Nochmal starten</button>
+    </div>
+  `;
+
+  document.getElementById('restart-geschichte-btn').onclick = () => ladeAlleGeschichteFragen();
+}
+
+
 function zeigeAuswertung() {
     document.getElementById('frage-box').classList.add('hidden');
     document.getElementById('auswertung-box').classList.remove('hidden');
   
-    const richtig = ergebnisse.filter(x => x).length;
-    const falsch = ergebnisse.length - richtig;
+    const richtig = matheErgebnisse.filter(x => x).length;
+    const falsch = matheErgebnisse.length - richtig;
   
     document.getElementById('auswertung-text').textContent =
       `Du hast ${richtig} richtig und ${falsch} falsch beantwortet.`;
@@ -157,8 +201,8 @@ function zeigeAuswertung() {
   
   
 function matheNeuStarten() {
-    aktuellerIndex = 0;
-    ergebnisse = [];
+    aktuellerMatheIndex = 0;
+    matheErgebnisse = [];
   
     document.getElementById('auswertung-box').classList.add('hidden');
     document.getElementById('frage-box').classList.remove('hidden');

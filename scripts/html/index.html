@@ -28,7 +28,7 @@
       </div>
       <ul class="nav-links">
         <li><a href="#" data-view="mathe">📐 Mathematik</a></li>
-        <li><a href="#" data-view="natur">🔬 Naturwissenschaften</a></li>
+        <li><a href="#" data-view="geschichte">📜 Geschichte</a></li>
         <li><a href="#" data-view="eigene">➕ Eigene Karten</a></li>
       </ul>
     </nav>
@@ -61,11 +61,28 @@
         </div>
       </section>      
 
-      <!-- Ansicht: Naturwissenschaften -->
-      <section id="view-natur" class="view hidden">
-        <h2>Naturwissenschaften</h2>
-        <p>Hier erscheinen Aufgaben aus Physik, Biologie etc.</p>
-      </section>
+      <!-- Ansicht: Geschichte -->
+      <section id="view-geschichte" class="view hidden">
+        <h2>Geschichte</h2>
+      <!-- Fragenanzeiige -->
+        <div id="geschichte-frage-box">
+          <div class="question-area">
+            <p id="geschichte-frage-text"></p>
+            <div id="geschichte-antwort-buttons" class="answer-buttons"></div>
+          </div>
+        </div>
+        <!-- Progress bar -->
+        <div class="progress-area">
+          <progress id="progress-bar" max="1" value="0"></progress>
+        </div>
+      
+        <!-- Auswertung -->
+        <div id="geschichte-auswertung-box" class="hidden auswertung-box">
+          <h3>Ergebnis</h3>
+          <p id="geschichte-auswertung-text"></p>
+          <button id="geschichte-restart-btn">🔁 Nochmal starten</button>
+        </div>
+      </section>      
 
       <!-- Ansicht: eigene Karten -->
       <section id="view-eigene" class="view hidden">

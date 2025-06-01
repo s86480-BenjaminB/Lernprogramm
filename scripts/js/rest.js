@@ -1,6 +1,6 @@
-const REST_BASE = 'http://idefix.informatik.htw-dresden.de:8888/api';
+const REST_BASE = 'https://idefix.informatik.htw-dresden.de:8888/api';
 const REST_USER = 's86480@htw-dresden.de';
-const REST_PASS = '?????????';
+const REST_PASS = 'Bb26.07.?';
 
 // Basic Auth Header erzeugen
 function authHeader() {
@@ -37,6 +37,7 @@ async function getAllQuizzes() {
 
     if (!res.ok) throw new Error(`Status: ${res.status}`);
     const data = await res.json();
+    console.log('📦 REST-Antwort:', data);
     return data.content || [];
   } catch (err) {
     console.error('❌ Fehler beim Laden der Quizzes:', err);
