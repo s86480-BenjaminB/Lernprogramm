@@ -12,7 +12,7 @@
   <!-- Styles -->
   <link rel="stylesheet" href="../css/style.css" />
 
-  <!-- KaTeX Styles & Scripts -->
+  <!-- KaTeX CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
@@ -29,7 +29,7 @@
       <ul class="nav-links">
         <li><a href="#" data-view="mathe">📐 Mathematik</a></li>
         <li><a href="#" data-view="geschichte">📜 Geschichte</a></li>
-        <li><a href="#" data-view="eigene">➕ Eigene Karten</a></li>
+        <li><a href="#" data-view="noten">🎵 Noten</a></li>
       </ul>
     </nav>
 
@@ -86,10 +86,22 @@
       </section>
       
 
-      <!-- Ansicht: eigene Karten -->
-      <section id="view-eigene" class="view hidden">
-        <h2>Eigene Lernkarten</h2>
-        <p>Hier kann man später mal eigene Fragen erstellen(?).</p>
+      <!-- Ansicht: Noten -->
+      <section id="view-noten" class="view hidden">
+        <h2>Noten Lernen</h2>
+        <div id="noten-box">
+          <div id="notation"></div>
+          <div id="noten-antwort-buttons" class="answer-buttons"></div>
+        </div>
+        <!-- Progresss bar -->
+        <div class="progress-area">
+          <progress id="progress-bar-noten"></progress>
+        </div>
+        <!-- Auswertung-->
+        <div id="noten-auswertung-box" class="hidden auswertung-box">
+          <p id="noten-auswertung-text"></p>
+          <button id="noten-restart-btn">🔁 Nochmal starten</button>
+        </div>
       </section>
     </main>
 
@@ -100,10 +112,12 @@
   </div>
 
   <!-- JS -->
+  <!-- Vex für Notendarstellung -->
+  <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+
   <script src="../js/navigation.js"></script>
   <script src="../js/rest.js"></script>
   <script src="../js/questionloader.js"></script>
-
 
   <!-- Service Worker Registrierung -->
   

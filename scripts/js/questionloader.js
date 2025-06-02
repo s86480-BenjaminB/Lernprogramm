@@ -2,9 +2,15 @@ const fragenUrl = '../json/fragen.json';
 let alleMatheFragen = [];
 let aktuellerMatheIndex = 0;
 let matheErgebnisse = [];
+
 let geschichteFragen = [];
 let geschichteIndex = 0;
 let geschichteErgebnisse = [];
+
+let notenFragen = [];
+let notenIndex = 0;
+let notenErgebnisse = [];
+
 
 
 function shuffleArray(array) {
@@ -55,6 +61,21 @@ async function ladeAlleGeschichteFragen() {
       <h2>Geschichte</h2>
       <p>Fehler beim Laden der Fragen.</p>
     `;
+  }
+}
+
+
+async function ladeAlleNotenFragen() {
+  try {
+    const res = await fetch(fragenUrl);
+    const daten = await res.json();
+    notenFragen = daten.noten.slice(0, 10);
+    notenIndex = 0;
+    notenErgebnisse = [];
+    updateProgressBar(notenIndex, notenFragen.length, 'noten');
+    zeigeNotenFrage(notenFragen[notenIndex]);
+  } catch (err) {
+    console.error('Fehler beim Laden der Notenfragen:', err);
   }
 }
 
@@ -131,6 +152,56 @@ function zeigeMatheFrage(frageObjekt) {
   
 }
 
+function zeigeNotenFrage(frageObjekt) {
+  const notation = document.getElementById('notation');
+  const antwortContainer = document.getElementById('noten-antwort-buttons');
+
+  notation.innerHTML = '';
+  antwortContainer.innerHTML = '';
+
+  const vf = new VexFlow.Factory({ renderer: { elementId: 'notation', width: 300, height: 120 } });
+  const score = vf.EasyScore();
+  const system = vf.System();
+  system.addStave({
+    voices: [score.voice(score.notes(frageObjekt.a, { stem: 'up' }))]
+  });
+  vf.draw();
+
+  frageObjekt.l.forEach((antwort, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'antwort-btn';
+    btn.textContent = antwort;
+
+    btn.onclick = () => {
+      const istKorrekt = (antwort === frageObjekt.l[0]);
+      const buttons = document.querySelectorAll('#noten-antwort-buttons .antwort-btn');
+      buttons.forEach(b => {
+        if (b === btn) {
+          b.classList.add(istKorrekt ? 'antwort-richtig' : 'antwort-falsch');
+        } else {
+          b.classList.add('antwort-neutral');
+        }
+        b.disabled = true;
+      });
+
+      notenErgebnisse.push(istKorrekt);
+      notenIndex++;
+      updateProgressBar(notenIndex, notenFragen.length, 'noten');
+
+      setTimeout(() => {
+        if (notenIndex < notenFragen.length) {
+          zeigeNotenFrage(notenFragen[notenIndex]);
+        } else {
+          zeigeNotenAuswertung();
+        }
+      }, 1500);
+    };
+
+    antwortContainer.appendChild(btn);
+  });
+}
+
+
 function updateProgressBar(value, max, fach) {
   const bar = document.getElementById(`progress-bar-${fach}`);
   if (bar) {
@@ -195,7 +266,18 @@ function zeigeAuswertung() {
       `Du hast ${richtig} richtig und ${falsch} falsch beantwortet.`;
 }     
   
-  
+function zeigeNotenAuswertung() {
+  const richtig = notenErgebnisse.filter(x => x).length;
+  const falsch = notenErgebnisse.length - richtig;
+
+  document.getElementById('noten-auswertung-box').classList.remove('hidden');
+  document.getElementById('noten-box').classList.add('hidden');
+  document.getElementById('noten-auswertung-text').textContent =
+    `Du hast ${richtig} richtig und ${falsch} falsch beantwortet.`;
+
+  document.getElementById('noten-restart-btn').onclick = notenNeuStarten;
+}
+
 function matheNeuStarten() {
     aktuellerMatheIndex = 0;
     matheErgebnisse = [];
@@ -216,4 +298,15 @@ function geschichteNeuStarten() {
   document.getElementById('progress-bar-geschichte').value = 0;
 
   ladeAlleGeschichteFragen();
+}
+
+function notenNeuStarten() {
+  notenIndex = 0;
+  notenErgebnisse = [];
+
+  document.getElementById('noten-auswertung-box').classList.add('hidden');
+  document.getElementById('noten-box').classList.remove('hidden');
+  document.getElementById('progress-bar-noten').value = 0;
+
+  ladeAlleNotenFragen();
 }

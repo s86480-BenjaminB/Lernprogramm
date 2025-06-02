@@ -17,7 +17,10 @@ document.querySelectorAll('.nav-links a').forEach(link => {
         ladeAlleMatheFragen();
       } else if (target === 'geschichte') {
         ladeAlleGeschichteFragen();
+      } else if (target === 'noten') {
+        ladeAlleNotenFragen();
       }
+
       
     });
   });
