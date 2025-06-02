@@ -153,27 +153,70 @@ function zeigeMatheFrage(frageObjekt) {
 }
 
 function zeigeNotenFrage(frageObjekt) {
-  const notation = document.getElementById('notation');
-  const antwortContainer = document.getElementById('noten-antwort-buttons');
+  // Notation-Div ersetzen
+  let notation = document.getElementById('notation');
+  const parent = notation.parentNode;
+  const neu = document.createElement('div');
+  neu.id = 'notation';
+  neu.style.marginBottom = '1rem';
+  parent.replaceChild(neu, notation);
+  notation = neu;
 
-  notation.innerHTML = '';
+  const antwortContainer = document.getElementById('noten-antwort-buttons');
   antwortContainer.innerHTML = '';
 
+  // Notation vorbereiten
+  let notenString = frageObjekt.a;
+  if (!notenString.includes('/')) {
+    notenString = notenString.includes('(')
+      ? notenString.replace(/[A-Ga-g0-9#]+/g, n => `${n}/q`)
+      : `${notenString}/q`;
+  }
+
+  // VexFlow Setup
   const vf = new VexFlow.Factory({ renderer: { elementId: 'notation', width: 300, height: 120 } });
   const score = vf.EasyScore();
   const system = vf.System();
-  system.addStave({
-    voices: [score.voice(score.notes(frageObjekt.a, { stem: 'up' }))]
-  });
-  vf.draw();
 
-  frageObjekt.l.forEach((antwort, index) => {
+  let voice;
+  try {
+    const parsedNotes = score.notes(notenString, { stem: 'up' });
+
+    if (!parsedNotes || parsedNotes.length === 0 || parsedNotes.some(n => n === undefined)) {
+      throw new Error("Score enthält ungültige oder leere Noten.");
+    }
+
+    voice = score.voice(parsedNotes);
+    voice.setStrict(false);
+  } catch (err) {
+    console.error('❌ Ungültige Noten:', notenString, err);
+    notation.innerHTML = `<p style="color:red">Fehlerhafte Noteneingabe: <code>${notenString}</code></p>`;
+    return;
+  }
+
+  try {
+    system.addStave({
+      voices: [voice]
+    }).addClef("treble").addTimeSignature("4/4");
+
+    vf.draw();
+  } catch (drawError) {
+    console.error('❌ Fehler beim Zeichnen der Notation:', drawError);
+    notation.innerHTML = `<p style="color:red">Fehler beim Zeichnen der Noten.</p>`;
+    return;
+  }
+
+  // Antwortmöglichkeiten mischen
+  const richtigeAntwort = frageObjekt.l[0];
+  const gemischt = shuffleArray(frageObjekt.l);
+
+  gemischt.forEach((antwort, index) => {
     const btn = document.createElement('button');
     btn.className = 'antwort-btn';
     btn.textContent = antwort;
 
     btn.onclick = () => {
-      const istKorrekt = (antwort === frageObjekt.l[0]);
+      const istKorrekt = (antwort === richtigeAntwort);
       const buttons = document.querySelectorAll('#noten-antwort-buttons .antwort-btn');
       buttons.forEach(b => {
         if (b === btn) {
