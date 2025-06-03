@@ -242,6 +242,36 @@ progress::-moz-progress-bar {
   background-color: #1565c0;
 }
 
+#view-internettechnologie .antwort-btn {
+  background-color: #e0f7fa;
+  border: 1px solid #80deea;
+}
+
+#view-internettechnologie .antwort-btn:hover {
+  background-color: #b2ebf2;
+}
+
+#view-internettechnologie .auswertung-box {
+  background-color: #e0f2f1;
+  border: 2px solid #4dd0e1;
+}
+
+#it-restart-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #00838f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+#it-restart-btn:hover {
+  background-color: #006064;
+}
+
 .sidebar {
   background-color: #1e88e5;
   color: white;

@@ -11,6 +11,9 @@ let notenFragen = [];
 let notenIndex = 0;
 let notenErgebnisse = [];
 
+let itFragen = [];
+let itIndex = 0;
+let itErgebnisse = [];
 
 
 function shuffleArray(array) {
@@ -38,6 +41,19 @@ async function ladeAlleMatheFragen() {
   }
 }
 
+async function ladeAlleITFragen() {
+  try {
+    const res = await fetch(fragenUrl);
+    const daten = await res.json();
+    itFragen = shuffleArray(daten.internettechnologie);
+    itIndex = 0;
+    itErgebnisse = [];
+    zeigeITFrage(itFragen[itIndex]);
+    updateProgressBar(itIndex, itFragen.length, 'it');
+  } catch (err) {
+    console.error('Fehler beim Laden der IT-Fragen:', err);
+  }
+}
 
 async function ladeAlleGeschichteFragen() {
   try {
@@ -117,6 +133,50 @@ function zeigeGeschichteFrage(frageObjekt) {
           zeigeGeschichteFrage(geschichteFragen[geschichteIndex]);
         } else {
           zeigeGeschichteAuswertung();
+        }
+      }, 1500);
+    };
+
+    antwortContainer.appendChild(btn);
+  });
+}
+
+function zeigeITFrage(frageObjekt) {
+  const frageText = document.getElementById('it-frage-text');
+  const antwortContainer = document.getElementById('it-antwort-buttons');
+
+  frageText.textContent = frageObjekt.a;
+  antwortContainer.innerHTML = '';
+
+  const richtigeAntwort = frageObjekt.l[0];
+  const gemischt = shuffleArray(frageObjekt.l);
+
+  gemischt.forEach((antwort) => {
+    const btn = document.createElement('button');
+    btn.className = 'antwort-btn';
+    btn.textContent = antwort;
+
+    btn.onclick = () => {
+      const istKorrekt = (antwort === richtigeAntwort);
+      const buttons = antwortContainer.querySelectorAll('button');
+      buttons.forEach(b => {
+        if (b === btn) {
+          b.classList.add(istKorrekt ? 'antwort-richtig' : 'antwort-falsch');
+        } else {
+          b.classList.add('antwort-neutral');
+        }
+        b.disabled = true;
+      });
+
+      itErgebnisse.push(istKorrekt);
+      itIndex++;
+      updateProgressBar(itIndex, itFragen.length, 'it');
+
+      setTimeout(() => {
+        if (itIndex < itFragen.length) {
+          zeigeITFrage(itFragen[itIndex]);
+        } else {
+          zeigeITAuswertung();
         }
       }, 1500);
     };
@@ -296,7 +356,17 @@ function zeigeGeschichteAuswertung() {
   document.getElementById('geschichte-restart-btn').onclick = geschichteNeuStarten;
 }
 
+function zeigeITAuswertung() {
+  const richtig = itErgebnisse.filter(x => x).length;
+  const falsch = itErgebnisse.length - richtig;
 
+  document.getElementById('it-frage-box').classList.add('hidden');
+  document.getElementById('it-auswertung-box').classList.remove('hidden');
+  document.getElementById('it-auswertung-text').textContent =
+    `Du hast ${richtig} richtig und ${falsch} falsch beantwortet.`;
+
+  document.getElementById('it-restart-btn').onclick = itNeuStarten;
+}
 
 function zeigeAuswertung() {
     document.getElementById('frage-box').classList.add('hidden');
@@ -341,6 +411,15 @@ function geschichteNeuStarten() {
   document.getElementById('progress-bar-geschichte').value = 0;
 
   ladeAlleGeschichteFragen();
+}
+
+function itNeuStarten() {
+  itIndex = 0;
+  itErgebnisse = [];
+  document.getElementById('it-auswertung-box').classList.add('hidden');
+  document.getElementById('it-frage-box').classList.remove('hidden');
+  document.getElementById('progress-bar-it').value = 0;
+  ladeAlleITFragen();
 }
 
 function notenNeuStarten() {

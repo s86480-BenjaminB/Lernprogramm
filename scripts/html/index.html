@@ -28,6 +28,7 @@
       </div>
       <ul class="nav-links">
         <li><a href="#" data-view="mathe">📐 Mathematik</a></li>
+        <li><a href="#" data-view="internettechnologie">🌐 Internettechnologie</a></li>
         <li><a href="#" data-view="geschichte">📜 Geschichte</a></li>
         <li><a href="#" data-view="noten">🎵 Noten</a></li>
       </ul>
@@ -40,6 +41,7 @@
         <h2>Was möchtest du lernen?</h2>
         <div class="start-buttons">
           <button data-view="mathe">📐 Mathematik</button>
+          <button data-view="internettechnologie">🌐 Internettechnologie</button>
           <button data-view="geschichte">📜 Geschichte</button>
           <button data-view="noten">🎵 Noten</button>
         </div>
@@ -70,6 +72,28 @@
           <button id="restart-btn" onclick="matheNeuStarten()">🔁 Nochmal starten</button>
         </div>
       </section>      
+
+      <!-- Ansicht: IT -->
+       <section id="view-internettechnologie" class="view hidden">
+        <h2>Internettechnologie</h2>
+        <!-- Fragenanzeige-->
+        <div id="it-frage-box">
+          <div class="question-area">
+            <p id="it-frage-text"></p>
+            <div id="it-antwort-buttons" class="answer-buttons"></div>
+          </div>
+          <!-- Progress bar -->
+          <div class="progress-area">
+            <progress id="progress-bar-it"></progress>
+          </div>
+        </div>
+        <!-- Auswertungg -->
+        <div id="it-auswertung-box" class="hidden auswertung-box">
+          <h3>Ergebnis</h3>
+          <p id="it-auswertung-text"></p>
+          <button id="it-restart-btn">🔁 Nochmal starten</button>
+        </div>
+      </section>
 
       <!-- Ansicht: Geschichte -->
       <section id="view-geschichte" class="view hidden">

@@ -52,5 +52,17 @@
       "a": "(F4 A4 C5)/q",
       "l": ["F-Dur", "C-Dur", "D-Moll", "G-Moll"]
     }
+  ],
+  "internettechnologie": [
+    { "a": "Was bedeutet HTTP?", "l": ["Hypertext Transfer Protocol", "High Text Transfer Page", "Hyperlink Total Package", "Host To Transport Protocol"] },
+    { "a": "Welche IP-Adresse ist privat?", "l": ["192.168.1.1", "8.8.8.8", "172.0.0.1", "10.10.256.1"] },
+    { "a": "Was ist die Standard-Portnummer für HTTPS?", "l": ["443", "80", "21", "25"] },
+    { "a": "Wofür steht die Abkürzung DNS?", "l": ["Domain Name System", "Dynamic Net Service", "Data Network Source", "Digital Naming Scheme"] },
+    { "a": "Was ist ein Beispiel für ein Top-Level-Domain?", "l": [".org", "www.", "/index.html", "@domain"] },
+    { "a": "Welche Schicht gehört NICHT zum OSI-Modell?", "l": ["Firewall-Schicht", "Transportschicht", "Sitzungsschicht", "Anwendungsschicht"] },
+    { "a": "Was macht ein Router?", "l": ["Verbindet Netzwerke miteinander", "Speichert Webseiten", "Sichert Daten vor Viren", "Komprimiert Videos"] },
+    { "a": "Welche Adresse ist typischerweise ein Loopback?", "l": ["127.0.0.1", "192.168.0.1", "10.0.0.1", "0.0.0.0"] },
+    { "a": "Was passiert beim PING-Befehl?", "l": ["Es wird die Erreichbarkeit einer IP geprüft", "Es wird eine Datei übertragen", "Ein Port wird geöffnet", "Ein Backup wird erstellt"] },
+    { "a": "Welche Organisation vergibt IP-Adressen weltweit?", "l": ["ICANN", "W3C", "IETF", "ISO"] }
   ]
 }

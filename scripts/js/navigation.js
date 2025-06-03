@@ -12,6 +12,8 @@ document.querySelectorAll('[data-view]').forEach(link => {
       ladeAlleGeschichteFragen();
     } else if (ziel === 'noten') {
       ladeAlleNotenFragen();
+    } else if (ziel === 'internettechnologie') {
+      ladeAlleITFragen();
     }
   });
 });
