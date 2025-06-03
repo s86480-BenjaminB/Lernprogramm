@@ -34,9 +34,19 @@
     </nav>
 
     <!-- Main Box (für Fragenansicht) -->
+     <!-- Start-view -->
     <main class="main-content">
+      <section id="view-start" class="view">
+        <h2>Was möchtest du lernen?</h2>
+        <div class="start-buttons">
+          <button data-view="mathe">📐 Mathematik</button>
+          <button data-view="geschichte">📜 Geschichte</button>
+          <button data-view="noten">🎵 Noten</button>
+        </div>
+      </section>
+
       <!-- Ansicht: Mathematik -->
-      <section id="view-mathe" class="view">
+      <section id="view-mathe" class="view hidden">
         <h2>Mathematik</h2>
         <!-- Fragenanzeige -->
         <div id="frage-box">

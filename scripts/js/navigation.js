@@ -1,27 +1,23 @@
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault();
-  
-      const target = link.dataset.view;
-  
-      document.querySelectorAll('.view').forEach(view =>
-        view.classList.add('hidden')
-      );
-  
-      const toShow = document.getElementById(`view-${target}`);
-      if (toShow) {
-        toShow.classList.remove('hidden');
-      }
-  
-      if (target === 'mathe') {
-        ladeAlleMatheFragen();
-      } else if (target === 'geschichte') {
-        ladeAlleGeschichteFragen();
-      } else if (target === 'noten') {
-        ladeAlleNotenFragen();
-      }
+document.querySelectorAll('[data-view]').forEach(link => {
+  link.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const ziel = link.getAttribute('data-view');
 
-      
-    });
+    document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+    document.getElementById(`view-${ziel}`).classList.remove('hidden');
+
+    if (ziel === 'mathe') {
+      ladeAlleMatheFragen();
+    } else if (ziel === 'geschichte') {
+      ladeAlleGeschichteFragen();
+    } else if (ziel === 'noten') {
+      ladeAlleNotenFragen();
+    }
   });
-  
+});
+
+// Extra: fürs zurückführen auf Start-view bei Click auf Titel
+document.querySelector('.branding').addEventListener('click', () => {
+  document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+  document.getElementById('view-start').classList.remove('hidden');
+});
