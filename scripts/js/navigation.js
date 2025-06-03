@@ -21,3 +21,20 @@ document.querySelector('.branding').addEventListener('click', () => {
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   document.getElementById('view-start').classList.remove('hidden');
 });
+
+// offline detector
+function updateConnectionStatus() {
+  const status = document.getElementById('connection-status');
+  if (!status) return;
+
+  const online = navigator.onLine;
+  status.textContent = online ? '🟢 Online' : '🔴 Offline';
+  status.style.color = online ? 'green' : 'red';
+}
+
+updateConnectionStatus();
+
+window.addEventListener('online', updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+
+setTimeout(updateConnectionStatus, 1500);
