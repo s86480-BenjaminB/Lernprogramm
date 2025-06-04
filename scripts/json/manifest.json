@@ -1,6 +1,6 @@
 {
-  "name": "Lernkarten PWA",
-  "short_name": "Lernkarten",
+  "name": "Lern.IO PWA",
+  "short_name": "Lern.IO",
   "start_url": "/scripts/html/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
