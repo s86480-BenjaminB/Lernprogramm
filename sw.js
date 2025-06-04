@@ -1,7 +1,7 @@
 const CACHE_NAME = 'lernapp-cache-v1';
 
 const urlsToCache = [
-  '/scripts/html/index.html',
+  '/index.html',
   '/scripts/css/style.css',
   '/scripts/js/navigation.js',
   '/scripts/js/rest.js',

@@ -1,6 +1,6 @@
 const REST_BASE = 'https://idefix.informatik.htw-dresden.de:8888/api';
-const REST_USER = 'sxxxxx@htw-dresden.de';
-const REST_PASS = '********';
+const REST_USER = 'bansebenjamin004@gmail.com';
+const REST_PASS = 'testpw123';
 
 // Basic Auth Header erzeugen
 function authHeader() {

@@ -6,11 +6,11 @@
   <title>Lern.IO</title>
 
   <!-- Manifest & Icon für PWA -->
-  <link rel="manifest" href="../json/manifest.json" />
-  <link rel="icon" href="../../images/main_icon.png" />
+  <link rel="manifest" href="/scripts/json/manifest.json" />
+  <link rel="icon" href="/images/main_icon.png" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="/scripts/css/style.css" />
 
   <!-- KaTeX CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -23,7 +23,7 @@
     <!-- Navbar -->
     <nav class="sidebar">
       <div class="branding">
-        <img src="../../images/main_icon.png" alt="App Icon" class="app-icon" />
+        <img src="/images/main_icon.png" alt="App Icon" class="app-icon" />
         <h1 class="app-title">Lern.IO</h1>
       </div>
       <ul class="nav-links">
@@ -149,15 +149,15 @@
   <!-- Vex für Notendarstellung -->
   <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
 
-  <script src="../js/navigation.js"></script>
-  <script src="../js/rest.js"></script>
-  <script src="../js/questionloader.js"></script>
+  <script src="/scripts/js/navigation.js"></script>
+  <script src="/scripts/js/rest.js"></script>
+  <script src="/scripts/js/questionloader.js"></script>
 
   <!-- Service Worker Registrierung -->
   
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('sw.js')
         .then(() => console.log('✅ Service Worker registriert'))
         .catch(err => console.error('❌ Fehler beim Registrieren:', err));
     }
