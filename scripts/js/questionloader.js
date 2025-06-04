@@ -1,4 +1,4 @@
-const fragenUrl = '/scripts/json/fragen.json';
+const fragenUrl = 'scripts/json/fragen.json';
 let alleMatheFragen = [];
 let aktuellerMatheIndex = 0;
 let matheErgebnisse = [];
