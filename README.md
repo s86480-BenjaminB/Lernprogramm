@@ -34,7 +34,7 @@ python -m http.server 5500
 ```
 
 Link zur Hauptseite:
-http://127.0.0.1:5500/scripts/html/index.html
+http://127.0.0.1:5500/index.html
 
 ---
 
